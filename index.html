@@ -24,7 +24,7 @@
         <div>
             <img src="{{ url_for('display_image', filename=filename) }}", width="300", height = "300">
         </div>
-    <h1>Classification: {{predicted}}</h1>
+
     {% endif %}
     <form method="post" action="/" enctype="multipart/form-data">
         <dl>
@@ -36,6 +36,31 @@
             <input type="submit" value="Submit" class="btn btn-info">
         </p>
     </form>
+
+    <h1>Classification: {{predicted}}</h1>
+    {% if predicted == "Melanoma" %}
+        <form method="post" action="/result" enctype="multipart/form-data">
+        <dl>
+            <p>
+                <div>
+                    <h3>Temperature of Melanoma Skin-region:</h3>
+                    <input type="text" name="mel_temp">
+                </div>
+                <div>
+                    <h3>Temperature of Normal Skin-region</h3>
+                    <input type="text" name="skin_temp">
+                </div>
+            </p>
+        </dl>
+        <p>
+            <input type="submit" value="Submit" class="btn-confirm">
+        </p>
+        </form>
+
+        <h1>{{res}}</h1>
+    {% endif %}
+
+
 </div>
 </div>
 </body>

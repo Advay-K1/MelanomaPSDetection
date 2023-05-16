@@ -17,6 +17,8 @@ app = Flask(__name__)
 UPLOAD_FOLDER = 'static/uploads/'
 
 predicted = ""
+predicted_class_name = ""
+filename = ""
 
 app.secret_key = "secret key"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -30,8 +32,11 @@ def home():
     return render_template('index.html')
 
 
+
 @app.route('/', methods=['POST'])
 def upload_image():
+    global predicted_class_name
+    global filename
     if 'file' not in request.files:
         flash('No file part')
         return redirect(request.url)
@@ -88,6 +93,16 @@ def upload_image():
     else:
         flash('Allowed image types are - png, jpg, jpeg, gif')
         return redirect(request.url)
+
+
+@app.route('/result', methods=['POST'])
+def result():
+    end_result = "The temperature difference between the 2 temperatures is less than 0.4, indicating that more tests are likely required to support the classification"
+    mel_temp = float(request.form['mel_temp'])
+    skin_temp = float(request.form['skin_temp'])
+    if abs(mel_temp - skin_temp > 0.4):
+        end_result = "The temperature difference between the 2 temperatures is greater than 0.4, indicating that the classifcation of Melanoma is very accurate"
+    return render_template('index.html', filename=filename, predicted=predicted_class_name, res = end_result)
 
 
 @app.route('/display/<filename>')
